@@ -32,6 +32,10 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gma.System.MouseKeyHook, Version=5.6.130.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MouseKeyHook.5.6.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
@@ -100,10 +104,10 @@
     <None Include="Resources\explorer.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\systemtrayapp.ico" />
+    <None Include="Properties\lock.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\lock.png" />
+    <Content Include="Resources\systemtrayapp.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
