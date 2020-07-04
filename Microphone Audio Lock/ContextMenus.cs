@@ -20,8 +20,12 @@ namespace Herochun_Microsoft_Audio_Lock
         CancellationTokenSource _cancelationTokenSource;
         MMDeviceEnumerator enumerator;
         List<KeyValuePair<float, string>> MicrophoneLevels;
+        List<KeyValuePair<float, string>> MicrophoneLevelsCopy;
+        List<KeyValuePair<float, string>> MicrophoneLevelsMute;
+        
         bool ifIsFirstRun = true;
 
+     
 
         /// <summary>
         /// Is the About box displayed?
@@ -36,8 +40,11 @@ namespace Herochun_Microsoft_Audio_Lock
         {
             _cancelationTokenSource = new CancellationTokenSource();
             enumerator = new MMDeviceEnumerator();
-            MicrophoneLevels = new List<KeyValuePair<float, string>>();
 
+            MicrophoneLevels = new List<KeyValuePair<float, string>>();
+            MicrophoneLevelsMute = new List<KeyValuePair<float, string>>();
+            MicrophoneLevelsCopy = new List<KeyValuePair<float, string>>();
+           
             // Add the default menu options.
             ContextMenuStrip menu = new ContextMenuStrip();
             ToolStripMenuItem item;
@@ -79,6 +86,15 @@ namespace Herochun_Microsoft_Audio_Lock
 
             return menu;
         }
+        public void SwapMuteUnMute() { 
+            //not running
+           
+              MicrophoneLevels= MicrophoneLevelsMute;
+              MicrophoneLevelsMute = MicrophoneLevelsCopy;
+              MicrophoneLevelsCopy = MicrophoneLevels;
+ 
+
+        }
 
         private void LockUnlock_Click(object sender, EventArgs e)
         {
@@ -97,26 +113,27 @@ namespace Herochun_Microsoft_Audio_Lock
             GC.Collect();
         }
 
-        public void InfiniteLoop()
+        public async void InfiniteLoop()
         {
             MMDeviceCollection mmdc = enumerator.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
+
             if (ifIsFirstRun) {
 
                 //add to the list
                 foreach (MMDevice device in mmdc)
                 {
 
-
                     string devicename = device.DeviceFriendlyName.Replace(" ", "").Replace("-", "").ToLower();
                     KeyValuePair<float, string> kvp = new KeyValuePair<float, string>(device.AudioEndpointVolume.MasterVolumeLevelScalar, devicename);
+                    KeyValuePair<float, string> kvpmute = new KeyValuePair<float, string>(0, devicename);
 
                     MicrophoneLevels.Add(kvp);
-
+                    MicrophoneLevelsMute.Add(kvpmute);
                     //}
                     //catch (Exception ex) { }
                 }
 
-
+                MicrophoneLevelsCopy = MicrophoneLevels;
                 ifIsFirstRun = false;
             }
 
@@ -130,13 +147,16 @@ namespace Herochun_Microsoft_Audio_Lock
                     //{
                     //Debug.WriteLine("{0}, {1}, {2}", device.FriendlyName, device.State, device.AudioEndpointVolume.VolumeRange);
                     //Debug.WriteLine("level is {0}", device.AudioEndpointVolume.MasterVolumeLevelScalar);
-                    device.AudioEndpointVolume.MasterVolumeLevelScalar = MicrophoneLevels[count].Key;
+                    await Task.Run(() =>
+                    {
+                        device.AudioEndpointVolume.MasterVolumeLevelScalar = MicrophoneLevels[count].Key;
+                    });
                     //}
                     //catch (Exception ex) { }
                     count++;
                 }
                 GC.Collect();
-                Thread.Sleep(250);
+                Thread.Sleep(100);
             }
         }
 
