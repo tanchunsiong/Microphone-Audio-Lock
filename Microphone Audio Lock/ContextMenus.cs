@@ -56,15 +56,10 @@ namespace Herochun_Microsoft_Audio_Lock
             btn.Text = "Lock/Unlock Volume";
             btn.Click += new EventHandler(LockUnlock_Click);
             btn.CheckOnClick = true;
-            btn.Image = Resources.Explorer;
+            btn.Image = Resources.Lock;
             menu.Items.Add(btn);
 
-            // Windows Explorer.
-            item = new ToolStripMenuItem();
-            item.Text = "Explorer";
-            item.Click += new EventHandler(Explorer_Click);
-            item.Image = Resources.Explorer;
-            menu.Items.Add(item);
+     
 
             // About.
             item = new ToolStripMenuItem();

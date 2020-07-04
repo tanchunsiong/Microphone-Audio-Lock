@@ -102,5 +102,8 @@
   <ItemGroup>
     <None Include="Resources\systemtrayapp.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\lock.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
